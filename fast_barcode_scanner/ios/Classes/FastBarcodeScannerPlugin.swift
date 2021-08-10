@@ -35,7 +35,7 @@ public class FastBarcodeScannerPlugin: NSObject, FlutterPlugin {
             case "torch": response = try toggleTorch()
             case "config":  response = try updateConfiguration(call: call).asDict
             case "dispose": dispose()
-            case "pick": analyzeImage(on: result); return
+            // case "pick": analyzeImage(on: result); return
             default: response = FlutterMethodNotImplemented
             }
 
@@ -100,32 +100,32 @@ public class FastBarcodeScannerPlugin: NSObject, FlutterPlugin {
         return camera.previewConfiguration
     }
 
-    func analyzeImage(on result: @escaping ([String]?) -> Void) {
-        guard picker == nil, let root = UIApplication.shared.delegate?.window??.rootViewController else {
-            return result(nil)
-        }
-
-        let visionResultHandler: BarcodeScanner.ResultHandler = { [weak self] barcode in
-            result(barcode)
-            self?.picker = nil
-        }
-
-        let imageResultHandler: ImagePicker.ResultHandler = { image in
-            guard let uiImage = image,
-                  let cgImage = uiImage.cgImage
-            else { return result(nil) }
-
-            let scanner = VisionBarcodeScanner(resultHandler: visionResultHandler)
-
-            scanner.performVisionRequest(cgImage: cgImage, orientation: .init(uiImage.imageOrientation))
-        }
-
-        if #available(iOS 14, *) {
-            picker = PHImagePicker(resultHandler: imageResultHandler)
-        } else {
-            picker = UIImagePicker(resultHandler: imageResultHandler)
-        }
-
-        picker!.show(over: root)
-    }
+//    func analyzeImage(on result: @escaping ([String]?) -> Void) {
+//        guard picker == nil, let root = UIApplication.shared.delegate?.window??.rootViewController else {
+//            return result(nil)
+//        }
+//
+//        let visionResultHandler: BarcodeScanner.ResultHandler = { [weak self] barcode in
+//            result(barcode)
+//            self?.picker = nil
+//        }
+//
+//        let imageResultHandler: ImagePicker.ResultHandler = { image in
+//            guard let uiImage = image,
+//                  let cgImage = uiImage.cgImage
+//            else { return result(nil) }
+//
+//            let scanner = VisionBarcodeScanner(resultHandler: visionResultHandler)
+//
+//            scanner.performVisionRequest(cgImage: cgImage, orientation: .init(uiImage.imageOrientation))
+//        }
+//
+//        if #available(iOS 14, *) {
+//            picker = PHImagePicker(resultHandler: imageResultHandler)
+//        } else {
+//            picker = UIImagePicker(resultHandler: imageResultHandler)
+//        }
+//
+//        picker!.show(over: root)
+//    }
 }
